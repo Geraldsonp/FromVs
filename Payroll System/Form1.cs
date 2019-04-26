@@ -58,6 +58,7 @@ namespace Payroll_System
                 DataBase.UpdatePersonFromDb(p);
                 MessageBox.Show($"Paid {T} to {p.Name}");
                 UpdateData();
+                ClearTextBox();
             }
             else MessageBox.Show("No hours to pay");
             //Si la persona no tiene horas devuelve este mesaje
@@ -77,8 +78,8 @@ namespace Payroll_System
             p.LastName = LastNametTxt.Text;
             p.WagePH = float.Parse(PaymentHTxt.Text);
             DataBase.AddPersonToDB(p);
-            ClearTextBox();
             UpdateData();
+            ClearTextBox();
         }
         private void BtnRemoveEmplo_Click(object sender, EventArgs e)
         {
