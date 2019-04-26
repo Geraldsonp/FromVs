@@ -13,7 +13,7 @@ namespace Payroll_System
 {
     public partial class Form1 : Form
     {
-        public List<Person> ListPerson = new List<Person>();
+        //public List<Person> ListPerson = new List<Person>();
         public Form1()
         {
             InitializeComponent();
@@ -37,9 +37,6 @@ namespace Payroll_System
             Person person = (Person)listBox1.SelectedItem;
             person.HourWorked = float.Parse(TotalHoursTxt.Text);
             DataBase.UpdatePersonFromDb(person);
-            UpdateData();
-            
-
         }
         private void BtnCalculate_Click(object sender, EventArgs e)
         {
@@ -48,17 +45,18 @@ namespace Payroll_System
             float total = p.WagePH * p.HourWorked;
             string msg = string.Format("Total To pay {0:C}", total);
             MessageBox.Show(msg);
-            UpdateData();
         }
         private void btnPayThis_Click(object sender, EventArgs e)
         {
             //Paga a la persona Lo que ha ganado Segun sus horas
             var p = (Person)listBox1.SelectedItem;
+            var T = p.HourWorked * p.WagePH;
             if (p.HourWorked > 0)
             {
                 p.PaidAlready = true;
                 p.HourWorked = 0.0f;
                 DataBase.UpdatePersonFromDb(p);
+                MessageBox.Show($"Paid {T} to {p.Name}");
                 UpdateData();
             }
             else MessageBox.Show("No hours to pay");
@@ -68,7 +66,6 @@ namespace Payroll_System
         private void Clearallbtn_Click(object sender, EventArgs e)
         {
             //Boton que limpia los textos
-            UpdateData();
             ClearTextBox();
             
         }
@@ -106,6 +103,7 @@ namespace Payroll_System
                     pictureBox1.Image = Image.FromFile(open.FileName);
                     var p = (Person)listBox1.SelectedItem;
                     p.Image = ImageToByte(Image.FromFile(open.FileName));
+                    DataBase.UpdatePersonFromDb(p);
 
                 }
 
@@ -121,12 +119,8 @@ namespace Payroll_System
         #region         Helpermethods
         public void UpdateData()
         {
-            //Refresca la connection
-            //ListPerson = null;
-            //ListPerson = DataBase.PersonListFromDB();
-            listBox1.DataSource = null;
             listBox1.DataSource = DataBase.PersonListFromDB();
-            //listBox1.DataSource = ListPerson;
+            listBox1.Refresh();
             listBox1.DisplayMember = "DisplaMembers";
         }
         public void DataToTextboxes(Person p)
@@ -192,10 +186,14 @@ namespace Payroll_System
         }
         public static Image ByteArrayToImage(byte[] img)
         {
-            using (MemoryStream mStream = new MemoryStream(img))
+            if (img != null)
             {
-                return Image.FromStream(mStream);
+                using (MemoryStream mStream = new MemoryStream(img))
+                {
+                    return Image.FromStream(mStream);
+                }
             }
+            else return null;
         }
        
         #endregion
