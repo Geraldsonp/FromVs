@@ -141,7 +141,7 @@ namespace Payroll_System
                 AgeTxt.Text = p.ID.ToString();
                 PaymentHTxt.Text = p.WagePH.ToString("C");
                 TotalHoursTxt.Text = p.HourWorked.ToString();
-                
+                pictureBox1.Image = ByteArrayToImage(p.Image);
                 if (p.PaidAlready)
                 {
                     TotalHoursTxt.Text = "Paid Already";
@@ -174,6 +174,7 @@ namespace Payroll_System
             PaymentHTxt.Clear();
             TotalHoursTxt.Clear();
             listBox1.ClearSelected();
+            pictureBox1.Image = null;
             TotalHoursTxt.ReadOnly = false;
 
 
@@ -188,6 +189,13 @@ namespace Payroll_System
             ImageConverter converter = new ImageConverter();
             
             return (byte[])converter.ConvertTo(img, typeof(byte[]));
+        }
+        public static Image ByteArrayToImage(byte[] img)
+        {
+            using (MemoryStream mStream = new MemoryStream(img))
+            {
+                return Image.FromStream(mStream);
+            }
         }
        
         #endregion
