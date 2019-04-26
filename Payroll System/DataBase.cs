@@ -56,9 +56,9 @@ namespace Payroll_System
         {
             using (IDbConnection cnn = new SQLiteConnection(CString()))
             {
-                cnn.Execute("UPDATE [Person] SET [Name] = @Name, [LastName] = @LastName, [WagePH] = @WagePH, [HourWorked] = @HourWorked, [PaidAlready] = @PaidAlready WHERE ID = @ID;",person);
+                cnn.Execute("UPDATE [Person] SET [Name] = @Name, [LastName] = @LastName, [WagePH] = @WagePH, [HourWorked] = @HourWorked, [PaidAlready] = @PaidAlready, Image = @Image WHERE ID = @ID;", person);
             
-                     }
+             }
 
         }
 

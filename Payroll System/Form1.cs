@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace Payroll_System
         }
 
 
-           #region Eventos y metodos
+        #region Eventos y metodos
 
 
         private void btnHours_Click(object sender, EventArgs e)
@@ -57,6 +58,7 @@ namespace Payroll_System
             {
                 p.PaidAlready = true;
                 p.HourWorked = 0.0f;
+                DataBase.UpdatePersonFromDb(p);
                 UpdateData();
             }
             else MessageBox.Show("No hours to pay");
@@ -91,8 +93,31 @@ namespace Payroll_System
                 ClearTextBox();
             }
         }
+        private void btnImage_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex >= 0 && pictureBox1.Image == null)
+            {
+                OpenFileDialog open = new OpenFileDialog();
 
+
+                open.Filter = "(*.Jpg;*.jpeg;*.bpm;) | *.Jpg;*.jpeg;*.bpm; ";
+                if (open.ShowDialog() == DialogResult.OK)
+                {
+                    pictureBox1.Image = Image.FromFile(open.FileName);
+                    var p = (Person)listBox1.SelectedItem;
+                    p.Image = ImageToByte(Image.FromFile(open.FileName));
+
+                }
+
+
+
+
+            }
+        }
         #endregion
+
+
+
         #region         Helpermethods
         public void UpdateData()
         {
@@ -116,6 +141,7 @@ namespace Payroll_System
                 AgeTxt.Text = p.ID.ToString();
                 PaymentHTxt.Text = p.WagePH.ToString("C");
                 TotalHoursTxt.Text = p.HourWorked.ToString();
+                
                 if (p.PaidAlready)
                 {
                     TotalHoursTxt.Text = "Paid Already";
@@ -148,10 +174,24 @@ namespace Payroll_System
             PaymentHTxt.Clear();
             TotalHoursTxt.Clear();
             listBox1.ClearSelected();
+            TotalHoursTxt.ReadOnly = false;
 
 
         }
+        /// <summary>
+        /// Combierte una imagen en Byte[]
+        /// </summary>
+        /// <param name="img"></param>
+        /// <returns></returns>
+        public static byte[] ImageToByte(Image img)
+        {
+            ImageConverter converter = new ImageConverter();
+            
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));
+        }
+       
         #endregion
 
+       
     }
 }

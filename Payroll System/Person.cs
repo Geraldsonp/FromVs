@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Payroll_System
         public float HourWorked { get; set; }
         public float WagePH { get; set; }
         public bool PaidAlready { get; set; }
-
+        public byte[] Image { get; set; }
         public string DisplaMembers
         {    
             get
